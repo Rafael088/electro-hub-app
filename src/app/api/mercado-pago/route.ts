@@ -1,26 +1,25 @@
-import { z } from 'zod';
-
 import type { IPreferenciaPago } from '@/types';
 import { crearRespuestaError, crearRespuestaExitosa, leerCuerpoJson } from '@/lib/api';
 import { crearPreferenciaPago } from '@/lib/mercado-pago';
 import { ErrorDeOrden, obtenerOrdenParaPago } from '@/lib/ordenes';
+import { describirErrorDeValidacion, esquemaSolicitudPago } from '@/lib/validaciones';
 
-const esquemaSolicitudPago = z.object({
-  ordenId: z.number().int().positive(),
-});
+function responderDatosInvalidos(mensaje: string) {
+  return crearRespuestaError<IPreferenciaPago>('Datos inválidos', mensaje, 400);
+}
 
 export async function POST(request: Request) {
   try {
     const cuerpo = await leerCuerpoJson(request);
 
     if (cuerpo === null) {
-      return crearRespuestaError<IPreferenciaPago>('Datos inválidos', 'El cuerpo de la petición debe ser un JSON válido', 400);
+      return responderDatosInvalidos('El cuerpo de la petición debe ser un JSON válido');
     }
 
     const resultado = esquemaSolicitudPago.safeParse(cuerpo);
 
     if (!resultado.success) {
-      return crearRespuestaError<IPreferenciaPago>('Datos inválidos', 'Se espera { ordenId } con un id válido', 400);
+      return responderDatosInvalidos(describirErrorDeValidacion(resultado.error));
     }
 
     const orden = await obtenerOrdenParaPago(resultado.data.ordenId);

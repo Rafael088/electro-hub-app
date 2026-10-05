@@ -1,11 +1,8 @@
 import { NextResponse } from 'next/server';
-import { z } from 'zod';
 
 import type { IApiResponse, IProducto } from '@/types';
 import { prisma } from '@/lib/prisma';
-
-// El id viaja como string en la URL: solo aceptamos enteros positivos.
-const esquemaIdProducto = z.string().regex(/^\d+$/);
+import { esquemaIdProducto } from '@/lib/validaciones';
 
 function obtenerIdProductoValido(idParametro: string): number | null {
   const resultado = esquemaIdProducto.safeParse(idParametro);

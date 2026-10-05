@@ -1,28 +1,7 @@
-import { z } from 'zod';
-
 import type { IOrdenCreada } from '@/types';
 import { crearRespuestaError, crearRespuestaExitosa, leerCuerpoJson } from '@/lib/api';
 import { crearOrden, ErrorDeOrden } from '@/lib/ordenes';
-
-const esquemaItemOrden = z.object({
-  productoId: z.number().int().positive(),
-  varianteId: z.number().int().positive(),
-  cantidad: z.number().int().positive(),
-  // El navegador manda el precio del carrito; acá solo validamos que sea número,
-  // el total se recalcula contra la base en calcularTotalOrden().
-  precio: z.number().nonnegative(),
-});
-
-const esquemaOrden = z.object({
-  nombre: z.string().trim().min(2).max(120),
-  email: z.email(),
-  telefono: z.string().trim().min(5).max(20),
-  direccion: z.string().trim().min(3).max(160),
-  ciudad: z.string().trim().min(2).max(80),
-  departamento: z.string().trim().min(2).max(80),
-  codigoPostal: z.string().trim().max(10).optional(),
-  items: z.array(esquemaItemOrden).min(1),
-});
+import { describirErrorDeValidacion, esquemaOrden } from '@/lib/validaciones';
 
 function responderDatosInvalidos(mensaje: string) {
   return crearRespuestaError<IOrdenCreada>('Datos inválidos', mensaje, 400);
@@ -39,9 +18,7 @@ export async function POST(request: Request) {
     const resultado = esquemaOrden.safeParse(cuerpo);
 
     if (!resultado.success) {
-      const primerError = resultado.error.issues[0];
-      const detalle = primerError ? `${primerError.path.join('.')}: ${primerError.message}` : 'Revisa el formulario';
-      return responderDatosInvalidos(detalle);
+      return responderDatosInvalidos(describirErrorDeValidacion(resultado.error));
     }
 
     const orden = await crearOrden(resultado.data);
