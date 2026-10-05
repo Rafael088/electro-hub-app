@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+/* Paleta Electro-Hub (tokens/electro-hub-variables.css del paquete de marca) */
+:root {
+  --background: #1a1b26;
+  --foreground: #f5f5f7;
+  --elevado: #2f313d;
+  --borde: #4b4e5e;
+  --acento: #00f0ff;
+  --acento-alt: #b829f7;
+  --texto-secundario: #c5c8d4;
+  --exito: #29f7a9;
+  --error: #ff4d6d;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-elevado: var(--elevado);
+  --color-borde: var(--borde);
+  --color-texto-secundario: var(--texto-secundario);
+  --color-acento: var(--acento);
+  --color-acento-alt: var(--acento-alt);
+  --color-exito: var(--exito);
+  --color-error: var(--error);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-pixel);
+  --font-mono: var(--font-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
