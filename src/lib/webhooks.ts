@@ -1,6 +1,8 @@
 import { InvalidWebhookSignatureError, Payment, WebhookSignatureValidator } from 'mercadopago';
 
-import type { EstadoOrden } from '@/types';
+import type { Prisma } from '@prisma/client';
+
+import type { EstadoOrden, IOrdenCreada, IOrdenItemCreado } from '@/types';
 
 import { prisma } from '@/lib/prisma';
 import { crearConfiguracionPago } from '@/lib/mercado-pago';
@@ -11,6 +13,19 @@ export interface INotificacionWebhook {
   xRequestId: string | null;
   dataId: string | null;
 }
+
+// Campos del pago que usa la lógica de la orden.
+interface IDatosPago {
+  id?: number;
+  status?: string;
+}
+
+// La orden con los campos internos de Mercado Pago: solo los usa el servidor,
+// por eso no forman parte del contrato IOrdenCreada que ve el frontend.
+type OrdenNotificada = IOrdenCreada & {
+  mpPaymentId: string | null;
+  mpStatus: string | null;
+};
 
 // Estados de pago que dejan la orden cancelada (o devuelta).
 const ESTADOS_DE_RECHAZO = ['rejected', 'cancelled', 'refunded', 'charged_back'];
@@ -45,31 +60,92 @@ function mapearEstadoPago(estadoPago: string | null | undefined): EstadoOrden | 
   return null;
 }
 
-export async function procesarPagoNotificado(paymentId: string): Promise<void> {
-  const pago = await new Payment(crearConfiguracionPago()).get({ id: paymentId });
-
-  if (!pago.external_reference) {
+function obtenerOrdenIdDePago(externalReference: string | undefined): number {
+  if (!externalReference) {
     throw new ErrorDeOrden('La notificación no trae external_reference', 400);
   }
 
-  const ordenId = Number(pago.external_reference);
+  const ordenId = Number(externalReference);
   if (!Number.isInteger(ordenId)) {
-    throw new ErrorDeOrden(`external_reference inválido: ${pago.external_reference}`, 400);
+    throw new ErrorDeOrden(`external_reference inválido: ${externalReference}`, 400);
   }
 
-  const orden = await prisma.orden.findUnique({ where: { id: ordenId } });
+  return ordenId;
+}
+
+async function obtenerOrdenNotificada(ordenId: number): Promise<OrdenNotificada> {
+  const orden = await prisma.orden.findUnique({
+    where: { id: ordenId },
+    include: { items: true },
+  });
+
   if (!orden) {
     throw new ErrorDeOrden(`No existe una orden con id ${ordenId}`, 404);
   }
 
-  const estado = mapearEstadoPago(pago.status);
-  // Semana 3: acá se descuenta el stock y se dispara el email con Resend.
-  await prisma.orden.update({
-    where: { id: ordenId },
-    data: {
-      estado: estado ?? orden.estado,
-      mpPaymentId: pago.id ? String(pago.id) : orden.mpPaymentId,
-      mpStatus: pago.status ?? orden.mpStatus,
-    },
+  return orden;
+}
+
+async function alcanzaElStock(tx: Prisma.TransactionClient, items: IOrdenItemCreado[]): Promise<boolean> {
+  for (const item of items) {
+    const variante = await tx.variante.findUnique({
+      where: { id: item.varianteId },
+      select: { stock: true },
+    });
+
+    if (!variante || variante.stock < item.cantidad) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+async function descontarStock(tx: Prisma.TransactionClient, items: IOrdenItemCreado[]): Promise<void> {
+  for (const item of items) {
+    await tx.variante.update({
+      where: { id: item.varianteId },
+      data: { stock: { decrement: item.cantidad } },
+    });
+  }
+}
+
+async function guardarResultadoPago(
+  orden: OrdenNotificada,
+  estado: EstadoOrden | null,
+  pago: IDatosPago
+): Promise<void> {
+  // Mercado Pago reintenta los webhooks: el stock solo baja en el pase de
+  // no-PAGADA a PAGADA, y en la misma transacción que el cambio de estado.
+  const seAcabaDePagar = estado === 'PAGADA' && orden.estado !== 'PAGADA';
+
+  await prisma.$transaction(async (tx) => {
+    let estadoFinal: EstadoOrden = estado ?? orden.estado;
+
+    if (seAcabaDePagar) {
+      if (await alcanzaElStock(tx, orden.items)) {
+        await descontarStock(tx, orden.items);
+      } else {
+        // MP ya cobró, pero no quedan unidades: la orden no se puede cumplir.
+        console.error(`Pago aprobado sin stock suficiente para la orden ${orden.id}`);
+        estadoFinal = 'CANCELADA';
+      }
+    }
+
+    await tx.orden.update({
+      where: { id: orden.id },
+      data: {
+        estado: estadoFinal,
+        mpPaymentId: pago.id ? String(pago.id) : orden.mpPaymentId,
+        mpStatus: pago.status ?? orden.mpStatus,
+      },
+    });
   });
+}
+
+export async function procesarPagoNotificado(paymentId: string): Promise<void> {
+  const pago = await new Payment(crearConfiguracionPago()).get({ id: paymentId });
+  const orden = await obtenerOrdenNotificada(obtenerOrdenIdDePago(pago.external_reference));
+
+  await guardarResultadoPago(orden, mapearEstadoPago(pago.status), pago);
 }
