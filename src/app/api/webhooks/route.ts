@@ -1,20 +1,12 @@
 import type { NextRequest } from 'next/server';
-import { z } from 'zod';
 
 import { crearRespuestaError, crearRespuestaExitosa, leerCuerpoJson } from '@/lib/api';
 import { ErrorDeOrden } from '@/lib/ordenes';
 import { procesarPagoNotificado, verificarFirmaWebhook } from '@/lib/webhooks';
+import { esquemaNotificacion, type NotificacionParseada } from '@/lib/validaciones';
 
-// Mercado Pago manda el id de la notificación de dos formas: en la query
-// (?data.id=123&type=payment) o en el body ({ data: { id } }). Si no coincide
-// con este esquema, respondemos 200 e ignoramos para que MP no reintente.
-const esquemaNotificacion = z.object({
-  type: z.string().optional(),
-  data: z.object({ id: z.union([z.string(), z.number()]) }).optional(),
-});
-
-type NotificacionParseada = z.infer<typeof esquemaNotificacion>;
-
+// Si la notificación no trae ni type ni data.id, respondemos 200 e ignoramos
+// para que Mercado Pago no reintente con algo que no podemos procesar.
 function extraerNotificacion(request: NextRequest, cuerpo: unknown): NotificacionParseada & { dataId: string | null } {
   const parseado = esquemaNotificacion.safeParse(cuerpo);
   const notificacion: NotificacionParseada = parseado.success ? parseado.data : {};
