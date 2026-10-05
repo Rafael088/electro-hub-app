@@ -76,6 +76,12 @@ export interface IOrdenCreada {
   items: IOrdenItemCreado[];
 }
 
+// Lo que el frontend recibe de POST /api/mercado-pago para abrir Checkout Pro.
+export interface IPreferenciaPago {
+  preferenceId: string;
+  initPoint: string;
+}
+
 // Formato común de todas las respuestas de /api
 export interface IApiResponse<T> {
   data: T | null;

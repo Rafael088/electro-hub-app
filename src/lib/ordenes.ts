@@ -41,6 +41,23 @@ export function calcularTotalOrden(items: IOrdenItem[]): number {
   return subtotal + COSTO_ENVIO;
 }
 
+export async function obtenerOrdenParaPago(ordenId: number): Promise<IOrdenCreada> {
+  const orden = await prisma.orden.findUnique({
+    where: { id: ordenId },
+    include: { items: true },
+  });
+
+  if (!orden) {
+    throw new ErrorDeOrden(`No existe una orden con id ${ordenId}`, 404);
+  }
+
+  if (orden.estado !== 'PENDIENTE') {
+    throw new ErrorDeOrden(`La orden ${ordenId} ya está ${orden.estado}`, 409);
+  }
+
+  return orden;
+}
+
 export async function crearOrden(orden: IOrden): Promise<IOrdenCreada> {
   const items = await Promise.all(orden.items.map(validarItem));
   const total = calcularTotalOrden(items);
