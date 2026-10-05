@@ -7,6 +7,7 @@ import type { EstadoOrden, IOrdenCreada, IOrdenItemCreado } from '@/types';
 import { prisma } from '@/lib/prisma';
 import { crearConfiguracionPago } from '@/lib/mercado-pago';
 import { ErrorDeOrden } from '@/lib/ordenes';
+import { enviarConfirmacionDeOrden } from '@/lib/email';
 
 export interface INotificacionWebhook {
   xSignature: string | null;
@@ -114,14 +115,13 @@ async function guardarResultadoPago(
   orden: OrdenNotificada,
   estado: EstadoOrden | null,
   pago: IDatosPago
-): Promise<void> {
+): Promise<EstadoOrden> {
   // Mercado Pago reintenta los webhooks: el stock solo baja en el pase de
   // no-PAGADA a PAGADA, y en la misma transacción que el cambio de estado.
   const seAcabaDePagar = estado === 'PAGADA' && orden.estado !== 'PAGADA';
+  let estadoFinal: EstadoOrden = estado ?? orden.estado;
 
   await prisma.$transaction(async (tx) => {
-    let estadoFinal: EstadoOrden = estado ?? orden.estado;
-
     if (seAcabaDePagar) {
       if (await alcanzaElStock(tx, orden.items)) {
         await descontarStock(tx, orden.items);
@@ -141,11 +141,26 @@ async function guardarResultadoPago(
       },
     });
   });
+
+  return estadoFinal;
+}
+
+// Un fallo de Resend no debe tumbar el webhook: la orden ya quedó pagada y el
+// reintento de Mercado Pago no reenviaría nada, solo repetiría la notificación.
+async function notificarPagoExitoso(orden: OrdenNotificada): Promise<void> {
+  try {
+    await enviarConfirmacionDeOrden(orden);
+  } catch (error) {
+    console.error(`No se pudo enviar la confirmación de la orden ${orden.id}:`, error);
+  }
 }
 
 export async function procesarPagoNotificado(paymentId: string): Promise<void> {
   const pago = await new Payment(crearConfiguracionPago()).get({ id: paymentId });
   const orden = await obtenerOrdenNotificada(obtenerOrdenIdDePago(pago.external_reference));
+  const estadoFinal = await guardarResultadoPago(orden, mapearEstadoPago(pago.status), pago);
 
-  await guardarResultadoPago(orden, mapearEstadoPago(pago.status), pago);
+  if (estadoFinal === 'PAGADA' && orden.estado !== 'PAGADA') {
+    await notificarPagoExitoso(orden);
+  }
 }
