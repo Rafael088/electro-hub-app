@@ -11,14 +11,18 @@ const MONEDA = 'COP';
 const RUTA_CONFIRMACION = '/confirmacion';
 const RUTA_WEBHOOKS = '/api/webhooks';
 
-function crearClientePago(): Preference {
+export function crearConfiguracionPago(): MercadoPagoConfig {
   const accessToken = process.env.MERCADO_PAGO_ACCESS_TOKEN;
 
   if (!accessToken) {
     throw new ErrorDeOrden('Mercado Pago no está configurado en el servidor', 503);
   }
 
-  return new Preference(new MercadoPagoConfig({ accessToken }));
+  return new MercadoPagoConfig({ accessToken });
+}
+
+function crearClientePago(): Preference {
+  return new Preference(crearConfiguracionPago());
 }
 
 function crearUrlAbsoluta(ruta: string): string {
