@@ -54,6 +54,34 @@ export interface IOrden {
   items: IOrdenItem[];
 }
 
+export type EstadoOrden = 'PENDIENTE' | 'PAGADA' | 'ENVIADA' | 'ENTREGADA' | 'CANCELADA';
+
+export interface IOrdenItemCreado extends IOrdenItem {
+  id: number;
+}
+
+// Lo que el frontend recibe de POST /api/orders.
+export interface IOrdenCreada {
+  id: number;
+  nombre: string;
+  email: string;
+  telefono: string;
+  direccion: string;
+  ciudad: string;
+  departamento: string;
+  codigoPostal: string | null;
+  estado: EstadoOrden;
+  total: number;
+  costoEnvio: number;
+  items: IOrdenItemCreado[];
+}
+
+// Lo que el frontend recibe de POST /api/mercado-pago para abrir Checkout Pro.
+export interface IPreferenciaPago {
+  preferenceId: string;
+  initPoint: string;
+}
+
 // Formato común de todas las respuestas de /api
 export interface IApiResponse<T> {
   data: T | null;
