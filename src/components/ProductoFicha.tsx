@@ -7,6 +7,7 @@ import type { IProducto, IVariante } from '@/types';
 import { formatearPrecio } from '@/lib/format';
 import { varianteInicial } from '@/lib/variantes';
 import { VariantSelector } from '@/components/VariantSelector';
+import { BotonAgregarAlCarrito } from '@/components/BotonAgregarAlCarrito';
 
 interface ProductoFichaProps {
   producto: IProducto;
@@ -56,6 +57,8 @@ export function ProductoFicha({ producto }: ProductoFichaProps) {
           variante={variante}
           onSeleccionar={setVariante}
         />
+
+        <BotonAgregarAlCarrito producto={producto} variante={variante} />
       </div>
     </article>
   );
