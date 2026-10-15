@@ -56,6 +56,21 @@ describe('CheckoutForm', () => {
     expect(screen.getByText('Escribe un correo válido')).toBeInTheDocument();
   });
 
+  it('borra el error de un campo cuando el usuario vuelve a escribir en él', () => {
+    renderForm();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Pagar' }));
+    expect(screen.getByText('Escribe tu nombre completo')).toBeInTheDocument();
+
+    fireEvent.change(screen.getByRole('textbox', { name: /nombre/i }), {
+      target: { value: 'Miguel Pérez' },
+    });
+
+    expect(screen.queryByText('Escribe tu nombre completo')).not.toBeInTheDocument();
+    // Los demás avisos siguen hasta que se vuelva a enviar
+    expect(screen.getByText('Escribe un correo válido')).toBeInTheDocument();
+  });
+
   it('confirma cuando el formulario es válido', () => {
     const { props } = renderForm();
 

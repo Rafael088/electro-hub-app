@@ -55,6 +55,12 @@ export function CheckoutForm({ onConfirmar, enviando, error }: CheckoutFormProps
 
   const cambiar = (campo: keyof DatosEnvio) => (valor: string): void => {
     setDatos((previo) => ({ ...previo, [campo]: valor }));
+    // El usuario ya está corrigiendo: el aviso bajo ese campo dejó de servir
+    setErrores((previo) =>
+      campo in previo
+        ? Object.fromEntries(Object.entries(previo).filter(([clave]) => clave !== campo))
+        : previo
+    );
   };
 
   const enviar = (evento: React.FormEvent<HTMLFormElement>): void => {
