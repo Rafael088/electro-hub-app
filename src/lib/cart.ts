@@ -1,6 +1,6 @@
 import type { ICarritoItem } from '@/types';
 
-const CART_KEY = 'electrohub-cart';
+export const CART_KEY = 'electrohub-cart';
 
 function guardarCarrito(carrito: ICarritoItem[]): void {
   localStorage.setItem(CART_KEY, JSON.stringify(carrito));
@@ -15,6 +15,20 @@ export function obtenerCarrito(): ICarritoItem[] {
   if (typeof window === 'undefined') return [];
   const cart = localStorage.getItem(CART_KEY);
   return cart ? (JSON.parse(cart) as ICarritoItem[]) : [];
+}
+
+// React compara las lecturas por identidad: si cada llamada devuelve un array
+// nuevo, useSyncExternalStore entra en bucle de renders. Aquí solo cambiamos la
+// referencia cuando cambió lo guardado en localStorage.
+let cache = { crudo: null as string | null, items: [] as ICarritoItem[] };
+
+export function leerCarritoCacheado(): ICarritoItem[] {
+  if (typeof window === 'undefined') return cache.items;
+  const crudo = localStorage.getItem(CART_KEY);
+  if (crudo !== cache.crudo) {
+    cache = { crudo, items: crudo ? (JSON.parse(crudo) as ICarritoItem[]) : [] };
+  }
+  return cache.items;
 }
 
 export function agregarItem(nuevoItem: ICarritoItem): void {
