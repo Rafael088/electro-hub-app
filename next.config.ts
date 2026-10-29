@@ -4,7 +4,10 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   images: {
     // Imágenes de ejemplo del seed
-    remotePatterns: [{ protocol: "https", hostname: "placehold.co" }],
+    remotePatterns: [
+      { protocol: "https", hostname: "placehold.co" },
+      { protocol: "https", hostname: "images.unsplash.com" },
+    ],
   },
 };
 

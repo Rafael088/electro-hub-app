@@ -17,14 +17,13 @@ async function main(): Promise<void> {
   }
 
   for (const producto of PRODUCTOS) {
-    const texto = encodeURIComponent(producto.nombre);
     await prisma.producto.create({
       data: {
         nombre: producto.nombre,
         descripcion: producto.descripcion,
         precio: producto.precio,
         tags: producto.tags,
-        imagenes: [`https://placehold.co/600x600/png?text=${texto}`],
+        imagenes: producto.imagenes,
         categoria: { connect: { nombre: producto.categoria } },
         variantes: { create: crearVariantes(producto) },
       },

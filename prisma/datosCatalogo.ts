@@ -9,6 +9,7 @@ export interface ProductoSemilla {
   tags: string[];
   condiciones: (string | null)[];
   colores: string[];
+  imagenes: string[];
 }
 
 export const CATEGORIAS = [
@@ -23,18 +24,18 @@ export const CATEGORIAS = [
 export const CONDICIONES_EQUIPO = ['Nuevo', 'Renovado'];
 
 export const PRODUCTOS: ProductoSemilla[] = [
-  { nombre: 'Portátil Ultrabook 14"', descripcion: 'Intel Core i5, 16 GB RAM, SSD 512 GB, pantalla IPS FHD.', precio: 2899000, categoria: 'Portátiles', tags: ['ultraligero', 'ssd'], condiciones: CONDICIONES_EQUIPO, colores: ['Gris espacial', 'Negro'] },
-  { nombre: 'Portátil Gamer 15.6"', descripcion: 'Ryzen 7, RTX 4050, 16 GB RAM, pantalla 144 Hz.', precio: 3799000, categoria: 'Portátiles', tags: ['gamer', 'rtx'], condiciones: ['Nuevo'], colores: ['Negro'] },
-  { nombre: 'Auriculares Inalámbricos Pro', descripcion: 'Cancelación activa de ruido, 40 h de batería.', precio: 429900, categoria: 'Auriculares', tags: ['anc', 'bluetooth'], condiciones: ['Nuevo'], colores: ['Negro', 'Blanco', 'Azul'] },
-  { nombre: 'Auriculares Gamer 7.1', descripcion: 'Sonido envolvente, micrófono con cancelación de ruido.', precio: 219900, categoria: 'Auriculares', tags: ['gamer', '7.1'], condiciones: ['Nuevo'], colores: ['Negro', 'Rojo'] },
-  { nombre: 'Audífonos True Wireless', descripcion: 'Bluetooth 5.3, estuche de carga, resistentes al agua.', precio: 149900, categoria: 'Audífonos', tags: ['tws', 'impermeable'], condiciones: ['Nuevo'], colores: ['Blanco', 'Negro'] },
-  { nombre: 'Audífonos Deportivos', descripcion: 'Gancho auricular, cable plano, micrófono inline.', precio: 79900, categoria: 'Audífonos', tags: ['deportivo'], condiciones: ['Nuevo'], colores: ['Verde', 'Naranja'] },
-  { nombre: 'Mouse Inalámbrico Ergonómico', descripcion: '6 botones, DPI ajustable, receptor USB + Bluetooth.', precio: 99900, categoria: 'Mouse', tags: ['ergonómico', 'inalámbrico'], condiciones: ['Nuevo'], colores: ['Negro', 'Gris'] },
-  { nombre: 'Mouse Gamer 16000 DPI', descripcion: 'Sensor óptico de alta precisión, RGB, cable paracord.', precio: 129900, categoria: 'Mouse', tags: ['gamer', 'rgb'], condiciones: ['Nuevo'], colores: ['Negro'] },
-  { nombre: 'Teclado Mecánico 60%', descripcion: 'Switches hot-swap, keycaps PBT, retroiluminación RGB.', precio: 259900, categoria: 'Teclados', tags: ['mecánico', 'hot-swap'], condiciones: ['Nuevo'], colores: ['Negro', 'Blanco'] },
-  { nombre: 'Teclado Inalámbrico Multimedia', descripcion: 'Silencioso, batería recargable, multi-dispositivo.', precio: 139900, categoria: 'Teclados', tags: ['inalámbrico', 'oficina'], condiciones: ['Nuevo'], colores: ['Gris', 'Rosa'] },
-  { nombre: 'Teléfono 5G 128 GB', descripcion: 'Pantalla AMOLED 6.5", cámara triple 50 MP, 5000 mAh.', precio: 1699000, categoria: 'Teléfonos', tags: ['5g', 'amoled'], condiciones: CONDICIONES_EQUIPO, colores: ['Negro', 'Verde'] },
-  { nombre: 'Teléfono Compacto 64 GB', descripcion: 'Pantalla 5.8", doble cámara, ideal para una mano.', precio: 849000, categoria: 'Teléfonos', tags: ['compacto'], condiciones: ['Nuevo', 'Renovado'], colores: ['Blanco', 'Azul'] },
+  { nombre: 'Portátil Ultrabook 14"', descripcion: 'Intel Core i5, 16 GB RAM, SSD 512 GB, pantalla IPS FHD.', precio: 2899000, categoria: 'Portátiles', tags: ['ultraligero', 'ssd'], condiciones: CONDICIONES_EQUIPO, colores: ['Gris espacial', 'Negro'], imagenes: ['https://images.unsplash.com/photo-1496181133206-80ce9b88a853'] },
+  { nombre: 'Portátil Gamer 15.6"', descripcion: 'Ryzen 7, RTX 4050, 16 GB RAM, pantalla 144 Hz.', precio: 3799000, categoria: 'Portátiles', tags: ['gamer', 'rtx'], condiciones: ['Nuevo'], colores: ['Negro'], imagenes: ['https://images.unsplash.com/photo-1517336714731-489689fd1ca8'] },
+  { nombre: 'Auriculares Inalámbricos Pro', descripcion: 'Cancelación activa de ruido, 40 h de batería.', precio: 429900, categoria: 'Auriculares', tags: ['anc', 'bluetooth'], condiciones: ['Nuevo'], colores: ['Negro', 'Blanco', 'Azul'], imagenes: ['https://images.unsplash.com/photo-1505740420928-5e560c06d30e'] },
+  { nombre: 'Auriculares Gamer 7.1', descripcion: 'Sonido envolvente, micrófono con cancelación de ruido.', precio: 219900, categoria: 'Auriculares', tags: ['gamer', '7.1'], condiciones: ['Nuevo'], colores: ['Negro', 'Rojo'], imagenes: ['https://images.unsplash.com/photo-1583394838336-acd977736f90'] },
+  { nombre: 'Audífonos True Wireless', descripcion: 'Bluetooth 5.3, estuche de carga, resistentes al agua.', precio: 149900, categoria: 'Audífonos', tags: ['tws', 'impermeable'], condiciones: ['Nuevo'], colores: ['Blanco', 'Negro'], imagenes: ['https://images.unsplash.com/photo-1590658268037-6bf12165a8df'] },
+  { nombre: 'Audífonos Deportivos', descripcion: 'Gancho auricular, cable plano, micrófono inline.', precio: 79900, categoria: 'Audífonos', tags: ['deportivo'], condiciones: ['Nuevo'], colores: ['Verde', 'Naranja'], imagenes: ['https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1'] },
+  { nombre: 'Mouse Inalámbrico Ergonómico', descripcion: '6 botones, DPI ajustable, receptor USB + Bluetooth.', precio: 99900, categoria: 'Mouse', tags: ['ergonómico', 'inalámbrico'], condiciones: ['Nuevo'], colores: ['Negro', 'Gris'], imagenes: ['https://images.unsplash.com/photo-1527864550417-7fd91fc51a46'] },
+  { nombre: 'Mouse Gamer 16000 DPI', descripcion: 'Sensor óptico de alta precisión, RGB, cable paracord.', precio: 129900, categoria: 'Mouse', tags: ['gamer', 'rgb'], condiciones: ['Nuevo'], colores: ['Negro'], imagenes: ['https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7'] },
+  { nombre: 'Teclado Mecánico 60%', descripcion: 'Switches hot-swap, keycaps PBT, retroiluminación RGB.', precio: 259900, categoria: 'Teclados', tags: ['mecánico', 'hot-swap'], condiciones: ['Nuevo'], colores: ['Negro', 'Blanco'], imagenes: ['https://images.unsplash.com/photo-1587829741301-dc798b83add3'] },
+  { nombre: 'Teclado Inalámbrico Multimedia', descripcion: 'Silencioso, batería recargable, multi-dispositivo.', precio: 139900, categoria: 'Teclados', tags: ['inalámbrico', 'oficina'], condiciones: ['Nuevo'], colores: ['Gris', 'Rosa'], imagenes: ['https://images.unsplash.com/photo-1511467687858-23d96c32e4ae'] },
+  { nombre: 'Teléfono 5G 128 GB', descripcion: 'Pantalla AMOLED 6.5", cámara triple 50 MP, 5000 mAh.', precio: 1699000, categoria: 'Teléfonos', tags: ['5g', 'amoled'], condiciones: CONDICIONES_EQUIPO, colores: ['Negro', 'Verde'], imagenes: ['https://images.unsplash.com/photo-1511707171634-5f897ff02aa9'] },
+  { nombre: 'Teléfono Compacto 64 GB', descripcion: 'Pantalla 5.8", doble cámara, ideal para una mano.', precio: 849000, categoria: 'Teléfonos', tags: ['compacto'], condiciones: ['Nuevo', 'Renovado'], colores: ['Blanco', 'Azul'], imagenes: ['https://images.unsplash.com/photo-1592750475338-74b7b21085ab'] },
 ];
 
 export function crearSku(nombre: string, condicion: string | null, color: string): string {
