@@ -25,6 +25,36 @@ export interface IProducto {
   variantes: IVariante[];
 }
 
+// Artículo de la vitrina (prueba1): datos locales mientras no hay BD.
+export interface IArticuloDestacado {
+  id: number;
+  marca: string;
+  /** Agrupa los productos en la portada */
+  categoria: string;
+  nombre: string;
+  imagen: string;
+  descripcion: string;
+  /** Color del fondo/decoración: sale del color real de la imagen */
+  colorAmbiente: string;
+  /** Sistema donde funciona el artículo (proyecto 3) */
+  compatibilidad: string;
+  /** Garantía formal mostrada bajo el botón del carrito (proyecto 3) */
+  garantia: string;
+  precio: number;
+  /** Color propio del artículo para el título (proyecto 2) */
+  colorMarca: string;
+  /** Precio antes de la rebaja; solo se muestra si existe */
+  precioOriginal?: number;
+  /** Variantes de color: cada una trae su imagen (proyecto 2) */
+  colores?: IColorArticulo[];
+}
+
+export interface IColorArticulo {
+  nombre: string;
+  hex: string;
+  imagen: string;
+}
+
 export interface ICarritoItem {
   productoId: number;
   varianteId: number;
@@ -34,6 +64,8 @@ export interface ICarritoItem {
   imagen: string;
   condicion?: string;
   color?: string;
+  /** Precio antes de la rebaja, para mostrarlo tachado en el carrito */
+  precioOriginal?: number;
 }
 
 export interface IOrdenItem {
