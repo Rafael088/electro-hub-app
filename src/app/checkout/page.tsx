@@ -34,7 +34,16 @@ function ResumenPedido({ items, total }: { items: ICarritoItem[]; total: number 
             <span>
               {item.cantidad}× {item.nombre}
             </span>
-            <span className="font-mono">{formatearPrecio(item.precio * item.cantidad)}</span>
+            <span className="font-mono">
+              {item.precioOriginal !== undefined && (
+                <s className="mr-2 text-texto-secundario/70">
+                  {formatearPrecio(item.precioOriginal * item.cantidad)}
+                </s>
+              )}
+              <span className={item.precioOriginal !== undefined ? 'text-[#FFD166]' : ''}>
+                {formatearPrecio(item.precio * item.cantidad)}
+              </span>
+            </span>
           </li>
         ))}
       </ul>

@@ -1,7 +1,5 @@
 'use client';
 
-import Image from 'next/image';
-
 import type { ICarritoItem } from '@/types';
 import { formatearPrecio } from '@/lib/format';
 
@@ -57,11 +55,11 @@ export function CartItem({ item, onCambiarCantidad, onQuitar }: CartItemProps) {
 
   return (
     <li className="flex gap-4 rounded-lg border border-borde bg-elevado p-4">
-      <Image
+      {/* <img> común como en toda la vitrina: las fotos vienen de tiendas
+          externas y next/image exigiría configurar cada host (parche proyecto 6) */}
+      <img
         src={item.imagen || 'https://placehold.co/600x600/png?text=Sin+imagen'}
         alt={item.nombre}
-        width={80}
-        height={80}
         className="h-20 w-20 shrink-0 rounded border border-borde object-cover"
       />
 
@@ -69,7 +67,18 @@ export function CartItem({ item, onCambiarCantidad, onQuitar }: CartItemProps) {
         <div>
           <p className="font-semibold">{item.nombre}</p>
           {detalle !== '' && <p className="text-sm text-texto-secundario">{detalle}</p>}
-          <p className="text-sm text-texto-secundario">{formatearPrecio(item.precio)} c/u</p>
+          <p className="text-sm text-texto-secundario">
+            {item.precioOriginal !== undefined ? (
+              <span className="flex items-center gap-2">
+                <s>{formatearPrecio(item.precioOriginal)}</s>
+                <span className="font-semibold text-[#FFD166]">
+                  {formatearPrecio(item.precio)} c/u
+                </span>
+              </span>
+            ) : (
+              `${formatearPrecio(item.precio)} c/u`
+            )}
+          </p>
         </div>
 
         <Controles item={item} onCambiarCantidad={onCambiarCantidad} onQuitar={onQuitar} />

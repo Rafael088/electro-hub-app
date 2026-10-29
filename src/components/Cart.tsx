@@ -33,6 +33,11 @@ interface ResumenProps {
 function Resumen({ items, onVaciar }: ResumenProps) {
   const total = calcularTotalCarrito(items);
   const unidades = items.reduce((cantidad, item) => cantidad + item.cantidad, 0);
+  const ahorro = items.reduce(
+    (suma, item) =>
+      item.precioOriginal !== undefined ? suma + (item.precioOriginal - item.precio) * item.cantidad : suma,
+    0
+  );
 
   return (
     <aside className="h-fit rounded-lg border border-borde bg-elevado p-6">
@@ -47,6 +52,12 @@ function Resumen({ items, onVaciar }: ResumenProps) {
           <dt>Envío</dt>
           <dd>Gratis</dd>
         </div>
+        {ahorro > 0 && (
+          <div className="flex justify-between text-[#FFD166]">
+            <dt>Ahorro por rebajas</dt>
+            <dd>−{formatearPrecio(ahorro)}</dd>
+          </div>
+        )}
       </dl>
 
       <p className="mt-4 border-t border-borde pt-4 font-mono text-xl text-acento">
