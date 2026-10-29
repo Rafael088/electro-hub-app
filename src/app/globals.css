@@ -33,3 +33,126 @@ body {
   color: var(--foreground);
   font-family: var(--font-inter), system-ui, sans-serif;
 }
+
+/* Proyecto 3: destellitos que suben de abajo hacia arriba en la portada y se
+   pierden conforme llegan arriba. Decoración pura, sin interacción. */
+@keyframes destelloSube {
+  0% {
+    transform: translateY(0) scale(0.5);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.9;
+  }
+  70% {
+    opacity: 0.45;
+  }
+  100% {
+    transform: translateY(-72vh) scale(1);
+    opacity: 0;
+  }
+}
+
+/* Proyecto 2: luces minimalistas del fondo en la página del producto */
+@keyframes luzFlota {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(8%, -10%, 0) scale(1.15);
+  }
+}
+
+/* Proyecto 4 (pulido): destellos que laten a los lados del rectángulo
+   blanco neón de las 3 rayas cuando el menú está abierto. */
+@keyframes destelloIzquierda {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translateX(0) scaleX(0.55);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-7px) scaleX(1);
+  }
+}
+
+@keyframes destelloDerecha {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translateX(0) scaleX(0.55);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(7px) scaleX(1);
+  }
+}
+
+/* Proyecto 5: orbes de espacio que laten (escala) bajo "Productos relacionados" */
+@keyframes orbilla {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.14);
+  }
+}
+
+/* Proyecto 5: parpadeo suave de las orbes amarillas pequeñas */
+@keyframes titila {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Proyecto 5: balanceo lento de la araña colgada de su telaraña */
+@keyframes telaranaMueve {
+  0%,
+  100% {
+    transform: rotate(-3deg) translateY(0);
+  }
+  50% {
+    transform: rotate(3deg) translateY(5px);
+  }
+}
+
+/* Proyecto 5 (parche): las calabazas brincan cuando el mouse va al logo */
+@keyframes calabazaBrinca {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  30% {
+    transform: translateY(-7px) rotate(-10deg);
+  }
+  60% {
+    transform: translateY(0) rotate(8deg);
+  }
+}
+
+/* Proyecto 5 (parche 2): al poner el cursor sobre el título, neón violeta
+   más iluminado. Va en CSS puro para ganarle por especificidad a la clase
+   base de color (con el menú cerrado el hover no llegaba a verse). */
+.logo-electro-hub:hover .logo-titulo {
+  color: #e7c7ff;
+  filter: drop-shadow(0 0 10px rgba(231, 199, 255, 0.95))
+    drop-shadow(0 0 28px rgba(200, 110, 255, 0.85))
+    drop-shadow(0 0 52px rgba(184, 41, 247, 0.6));
+}
+
+/* Proyecto 5 (parche 2): nube espacial que respira detrás del buscador */
+@keyframes nubeEspacial {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(6%, -7%, 0) scale(1.18);
+  }
+}
