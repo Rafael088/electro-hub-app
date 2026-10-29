@@ -31,7 +31,7 @@ const CAMPOS: { etiqueta: string; nombre: keyof DatosEnvio; tipo?: string }[] = 
 ];
 
 const CLASE_CAMPO =
-  'mt-1 w-full rounded border bg-background px-3 py-2 text-sm focus:border-acento focus:outline-none';
+  'mt-1 w-full rounded-xl border bg-background/70 px-3 py-2.5 text-sm transition focus:border-acento focus:outline-none focus:ring-2 focus:ring-acento/20';
 
 function Campo({ etiqueta, nombre, valor, error, tipo = 'text', onCambio }: CampoProps) {
   return (
@@ -71,7 +71,7 @@ export function CheckoutForm({ onConfirmar, enviando, error }: CheckoutFormProps
   };
 
   return (
-    <form onSubmit={enviar} noValidate className="rounded-lg border border-borde bg-elevado p-6">
+    <form onSubmit={enviar} noValidate className="rounded-2xl border border-borde/60 bg-elevado/60 p-6 backdrop-blur">
       <h2 className="font-display text-lg font-semibold">Datos de envío</h2>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -95,7 +95,7 @@ export function CheckoutForm({ onConfirmar, enviando, error }: CheckoutFormProps
       <button
         type="submit"
         disabled={enviando}
-        className="mt-6 w-full rounded bg-acento px-4 py-3 font-semibold text-background transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+        className="boton-gradiente mt-6 w-full rounded-full px-4 py-3 font-semibold disabled:cursor-not-allowed disabled:opacity-50"
       >
         {enviando ? 'Procesando…' : 'Pagar'}
       </button>

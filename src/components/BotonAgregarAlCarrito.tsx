@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 import type { IProducto, IVariante } from '@/types';
-import { agregarItem } from '@/lib/cart';
+import { useCarrito } from '@/hooks/useCarrito';
 
 interface BotonAgregarAlCarritoProps {
   producto: IProducto;
@@ -25,14 +25,15 @@ function crearItem(producto: IProducto, variante: IVariante) {
 }
 
 export function BotonAgregarAlCarrito({ producto, variante }: BotonAgregarAlCarritoProps) {
+  const { agregar } = useCarrito();
   const [agregado, setAgregado] = useState(false);
 
   if (variante === null) {
     return <p className="mt-6 text-sm text-texto-secundario">Elige una variante para continuar</p>;
   }
 
-  const agregar = (): void => {
-    agregarItem(crearItem(producto, variante));
+  const agregarAlCarrito = (): void => {
+    agregar(crearItem(producto, variante));
     setAgregado(true);
   };
 
@@ -43,15 +44,18 @@ export function BotonAgregarAlCarrito({ producto, variante }: BotonAgregarAlCarr
       <button
         type="button"
         disabled={agotado}
-        onClick={agregar}
-        className="rounded bg-acento px-6 py-3 font-semibold text-background transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+        onClick={agregarAlCarrito}
+        className="boton-gradiente rounded-full px-7 py-3 font-semibold disabled:cursor-not-allowed disabled:opacity-50"
       >
         {agotado ? 'Agotado' : 'Agregar al carrito'}
       </button>
 
       {agregado && (
-        <Link href="/carrito" className="text-sm text-exito hover:underline">
-          Ver carrito →
+        <Link
+          href="/carrito"
+          className="animar-entrada flex items-center gap-1.5 text-sm text-exito transition hover:underline"
+        >
+          <span aria-hidden="true">✓</span> Ver carrito →
         </Link>
       )}
     </div>

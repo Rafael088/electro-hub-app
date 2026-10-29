@@ -11,9 +11,12 @@ import { usePago } from '@/hooks/usePago';
 
 function CarritoVacio() {
   return (
-    <div className="py-16 text-center">
+    <div className="animar-entrada mx-auto max-w-md rounded-2xl border border-borde/60 bg-elevado/50 p-12 text-center">
       <p className="text-texto-secundario">No hay nada que pagar: tu carrito está vacío</p>
-      <Link href="/" className="mt-4 inline-block text-acento hover:underline">
+      <Link
+        href="/"
+        className="mt-5 inline-block rounded-full bg-acento px-5 py-2 text-sm font-semibold text-background transition hover:opacity-90"
+      >
         Ver catálogo
       </Link>
     </div>
@@ -22,7 +25,7 @@ function CarritoVacio() {
 
 function ResumenPedido({ items, total }: { items: ICarritoItem[]; total: number }) {
   return (
-    <aside className="h-fit rounded-lg border border-borde bg-elevado p-6">
+    <aside className="sticky top-24 h-fit rounded-2xl border border-borde/60 bg-elevado/60 p-6 backdrop-blur">
       <h2 className="font-display text-lg font-semibold">Tu pedido</h2>
 
       <ul className="mt-4 space-y-2 text-sm">
@@ -39,10 +42,11 @@ function ResumenPedido({ items, total }: { items: ICarritoItem[]; total: number 
         ))}
       </ul>
 
-      <p className="mt-4 border-t border-borde pt-4 font-mono text-xl text-acento">
+      <p className="mt-4 border-t border-borde/60 pt-4 font-mono text-xl text-acento">
         {formatearPrecio(total)}
       </p>
       <p className="mt-2 text-xs text-exito">Envío gratis en Colombia</p>
+      <p className="mt-1 text-xs text-texto-secundario">Pago seguro con Mercado Pago</p>
     </aside>
   );
 }
@@ -53,9 +57,13 @@ export default function PaginaCheckout() {
 
   if (items.length === 0) {
     return (
-      <main className="flex-1 p-6 md:p-10">
-        <h1 className="font-display text-3xl font-bold text-acento">Checkout</h1>
-        <CarritoVacio />
+      <main className="flex-1 px-6 pb-12 pt-6 md:px-10">
+        <div className="mx-auto max-w-5xl">
+          <h1 className="font-display text-3xl font-bold text-acento md:text-4xl">Checkout</h1>
+          <div className="mt-6">
+            <CarritoVacio />
+          </div>
+        </div>
       </main>
     );
   }
@@ -65,22 +73,31 @@ export default function PaginaCheckout() {
   };
 
   return (
-    <main className="flex-1 p-6 md:p-10">
-      <Link href="/carrito" className="text-sm text-acento hover:underline">
-        ← Volver al carrito
-      </Link>
-      <h1 className="font-display mt-4 text-3xl font-bold text-acento">Checkout</h1>
+    <main className="flex-1 px-6 pb-12 pt-6 md:px-10">
+      <div className="mx-auto max-w-5xl">
+        <Link
+          href="/carrito"
+          className="inline-flex items-center gap-1.5 text-sm text-texto-secundario transition hover:text-acento"
+        >
+          ← Volver al carrito
+        </Link>
 
-      <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_320px]">
-        <CheckoutForm onConfirmar={confirmar} enviando={enviando} error={error} />
-        <ResumenPedido items={items} total={total} />
-      </div>
-
-      {mensaje !== null && (
-        <p className="mt-6 rounded border border-borde bg-elevado p-4 text-sm text-texto-secundario">
-          {mensaje}
+        <h1 className="font-display mt-4 text-3xl font-bold text-acento md:text-4xl">Checkout</h1>
+        <p className="mt-1 text-sm text-texto-secundario">
+          Completa tus datos y paga de forma segura
         </p>
-      )}
+
+        <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_340px]">
+          <CheckoutForm onConfirmar={confirmar} enviando={enviando} error={error} />
+          <ResumenPedido items={items} total={total} />
+        </div>
+
+        {mensaje !== null && (
+          <p className="mt-6 rounded-2xl border border-borde/60 bg-elevado/60 p-4 text-sm text-texto-secundario">
+            {mensaje}
+          </p>
+        )}
+      </div>
     </main>
   );
 }

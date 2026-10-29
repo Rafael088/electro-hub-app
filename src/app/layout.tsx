@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Pixelify_Sans } from "next/font/google";
+
+import { Encabezado } from "@/components/Encabezado";
+import { PiePagina } from "@/components/PiePagina";
+
 import "./globals.css";
 
 const pixelifySans = Pixelify_Sans({
@@ -29,7 +33,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="es"
       className={`${pixelifySans.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Encabezado />
+        {children}
+        <PiePagina />
+      </body>
     </html>
   );
 }

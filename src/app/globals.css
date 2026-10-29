@@ -5,6 +5,7 @@
   --background: #1a1b26;
   --foreground: #f5f5f7;
   --elevado: #2f313d;
+  --elevado-hondo: #232534;
   --borde: #4b4e5e;
   --acento: #00f0ff;
   --acento-alt: #b829f7;
@@ -17,6 +18,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-elevado: var(--elevado);
+  --color-elevado-hondo: var(--elevado-hondo);
   --color-borde: var(--borde);
   --color-texto-secundario: var(--texto-secundario);
   --color-acento: var(--acento);
@@ -28,8 +30,193 @@
   --font-mono: var(--font-mono);
 }
 
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Fondo: rejilla tenue + halos cian y púrpura de la marca */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60rem 30rem at 10% -10%, rgba(0, 240, 255, 0.1), transparent 60%),
+    radial-gradient(50rem 28rem at 95% 0%, rgba(184, 41, 247, 0.12), transparent 60%),
+    radial-gradient(40rem 30rem at 50% 110%, rgba(0, 240, 255, 0.06), transparent 60%),
+    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: auto, auto, auto, 3rem 3rem, 3rem 3rem;
+}
+
+::selection {
+  background: rgba(0, 240, 255, 0.25);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3a3d4d;
+  border: 2px solid var(--background);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--borde);
+}
+
+/* Animaciones */
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes flotar {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes brillar {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes pulso-borde {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(0, 240, 255, 0);
+  }
+}
+
+@keyframes barrido {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(220%);
+  }
+}
+
+.animar-entrada {
+  animation: aparecer 0.55s cubic-bezier(0.22, 0.8, 0.31, 1) both;
+}
+
+.animar-flotar {
+  animation: flotar 6s ease-in-out infinite;
+}
+
+.punto-vivo {
+  animation: brillar 1.6s ease-in-out infinite;
+}
+
+.pulso-acento {
+  animation: pulso-borde 2.4s ease-in-out infinite;
+}
+
+.titulo-degradado {
+  background: linear-gradient(100deg, var(--acento) 10%, #8ef4ff 45%, var(--acento-alt));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.destello {
+  text-shadow: 0 0 24px rgba(0, 240, 255, 0.35);
+}
+
+.tarjeta {
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.tarjeta:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 240, 255, 0.55);
+  box-shadow: 0 22px 60px -28px rgba(0, 240, 255, 0.55);
+}
+
+.boton-gradiente {
+  background: linear-gradient(100deg, var(--acento), #79f2ff 60%, var(--acento-alt));
+  color: #0c0d14;
+  box-shadow: 0 10px 30px -12px rgba(0, 240, 255, 0.55);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.25s ease,
+    filter 0.2s ease;
+}
+
+.boton-gradiente:hover:not(:disabled) {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px -14px rgba(0, 240, 255, 0.7);
+}
+
+.boton-gradiente:active:not(:disabled) {
+  transform: translateY(0) scale(0.99);
+}
+
+.superficie {
+  background: color-mix(in srgb, var(--elevado) 82%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.esqueleto {
+  position: relative;
+  overflow: hidden;
+  background: var(--elevado-hondo);
+}
+
+.esqueleto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+  animation: barrido 1.6s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

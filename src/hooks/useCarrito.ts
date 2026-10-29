@@ -7,6 +7,7 @@ import {
   agregarItem,
   actualizarCantidad,
   calcularTotalCarrito,
+  CART_EVENT,
   leerCarritoCacheado,
   limpiarCarrito,
   quitarItem,
@@ -28,10 +29,15 @@ function leerEnServidor(): ICarritoItem[] {
   return itemsEnServidor;
 }
 
-// El evento `storage` llega solo a las otras pestañas; React re-lee al avisar
+// El evento `storage` llega solo a las otras pestañas; CART_EVENT avisa a los
+// componentes de esta misma pestaña (header, carrito, checkout).
 function suscribir(avisar: () => void): () => void {
   window.addEventListener('storage', avisar);
-  return () => window.removeEventListener('storage', avisar);
+  window.addEventListener(CART_EVENT, avisar);
+  return () => {
+    window.removeEventListener('storage', avisar);
+    window.removeEventListener(CART_EVENT, avisar);
+  };
 }
 
 export function useCarrito(): Carrito {

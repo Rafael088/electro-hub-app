@@ -12,8 +12,12 @@ export function ProductGrid({ productos }: ProductGridProps) {
 
   return (
     <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {productos.map((producto) => (
-        <li key={producto.id}>
+      {productos.map((producto, indice) => (
+        <li
+          key={producto.id}
+          className="animar-entrada"
+          style={{ animationDelay: `${indice * 45}ms` }}
+        >
           <ProductCard producto={producto} />
         </li>
       ))}

@@ -22,7 +22,7 @@ interface GrupoOpcionesProps {
 }
 
 const CLASE_BASE =
-  'rounded border px-3 py-1.5 text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-acento';
+  'rounded-full border px-3.5 py-1.5 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-acento';
 
 function GrupoOpciones({ titulo, opciones, seleccion, onElegir }: GrupoOpcionesProps) {
   // Con una sola opción no hay nada que elegir
@@ -42,8 +42,8 @@ function GrupoOpciones({ titulo, opciones, seleccion, onElegir }: GrupoOpcionesP
               onClick={() => onElegir(opcion)}
               className={`${CLASE_BASE} ${
                 activa
-                  ? 'border-acento bg-background text-acento'
-                  : 'border-borde text-texto-secundario hover:border-acento hover:text-acento'
+                  ? 'border-acento bg-acento/10 text-acento shadow-[0_0_22px_-10px_rgba(0,240,255,0.9)]'
+                  : 'border-borde/70 text-texto-secundario hover:border-acento/60 hover:text-acento'
               }`}
             >
               {opcion}
@@ -58,10 +58,17 @@ function GrupoOpciones({ titulo, opciones, seleccion, onElegir }: GrupoOpcionesP
 function EstadoStock({ variante }: { variante: IVariante | null }) {
   if (variante === null)
     return <p className="mt-4 text-sm text-texto-secundario">Elige una opción</p>;
-  if (variante.stock <= 0) return <p className="mt-4 text-sm text-error">Agotado</p>;
+  if (variante.stock <= 0)
+    return (
+      <p className="mt-4 flex items-center gap-2 text-sm text-error">
+        <span aria-hidden="true" className="h-2 w-2 rounded-full bg-error" />
+        Agotado
+      </p>
+    );
   return (
-    <p className="mt-4 text-sm text-exito">
-      {variante.stock} disponibles · SKU {variante.sku}
+    <p className="mt-4 flex items-center gap-2 text-sm text-exito">
+      <span aria-hidden="true" className="punto-vivo h-2 w-2 rounded-full bg-exito" />
+      {`${variante.stock} disponibles · SKU ${variante.sku}`}
     </p>
   );
 }

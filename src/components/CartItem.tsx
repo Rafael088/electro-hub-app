@@ -14,12 +14,12 @@ interface CartItemProps {
 function Controles({ item, onCambiarCantidad, onQuitar }: CartItemProps) {
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <div className="flex items-center rounded border border-borde">
+      <div className="flex items-center overflow-hidden rounded-full border border-borde/70">
         <button
           type="button"
           aria-label={`Reducir cantidad de ${item.nombre}`}
           onClick={() => onCambiarCantidad(item.cantidad - 1)}
-          className="px-3 py-1.5 hover:text-acento"
+          className="px-3 py-1.5 transition hover:bg-acento/10 hover:text-acento"
         >
           -
         </button>
@@ -30,7 +30,7 @@ function Controles({ item, onCambiarCantidad, onQuitar }: CartItemProps) {
           type="button"
           aria-label={`Aumentar cantidad de ${item.nombre}`}
           onClick={() => onCambiarCantidad(item.cantidad + 1)}
-          className="px-3 py-1.5 hover:text-acento"
+          className="px-3 py-1.5 transition hover:bg-acento/10 hover:text-acento"
         >
           +
         </button>
@@ -44,7 +44,7 @@ function Controles({ item, onCambiarCantidad, onQuitar }: CartItemProps) {
         type="button"
         aria-label={`Quitar ${item.nombre} del carrito`}
         onClick={onQuitar}
-        className="text-sm text-error hover:underline"
+        className="text-sm text-error transition hover:underline"
       >
         Quitar
       </button>
@@ -56,13 +56,13 @@ export function CartItem({ item, onCambiarCantidad, onQuitar }: CartItemProps) {
   const detalle = [item.condicion, item.color].filter(Boolean).join(' · ');
 
   return (
-    <li className="flex gap-4 rounded-lg border border-borde bg-elevado p-4">
+    <li className="tarjeta flex gap-4 rounded-2xl border border-borde/60 bg-elevado/60 p-4">
       <Image
         src={item.imagen || 'https://placehold.co/600x600/png?text=Sin+imagen'}
         alt={item.nombre}
         width={80}
         height={80}
-        className="h-20 w-20 shrink-0 rounded border border-borde object-cover"
+        className="h-20 w-20 shrink-0 rounded-xl border border-borde/60 object-cover"
       />
 
       <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

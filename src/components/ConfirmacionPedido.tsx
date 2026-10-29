@@ -60,8 +60,18 @@ export function ConfirmacionPedido() {
 
   return (
     <>
+      <div
+        className={`mb-6 grid h-16 w-16 place-items-center rounded-2xl border text-3xl ${
+          estado.esExito
+            ? 'pulso-acento border-exito/50 bg-exito/10 text-exito'
+            : 'border-acento/40 bg-acento/10 text-acento'
+        }`}
+      >
+        {estado.esExito ? '✓' : '⋯'}
+      </div>
+
       <h1
-        className={`font-display text-3xl font-bold ${estado.esExito ? 'text-exito' : 'text-acento'}`}
+        className={`text-3xl font-bold ${estado.esExito ? 'text-exito' : 'text-acento'}`}
       >
         {estado.titulo}
       </h1>
@@ -77,7 +87,7 @@ export function ConfirmacionPedido() {
 
       <Link
         href="/"
-        className="mt-8 inline-block rounded bg-acento px-4 py-3 font-semibold text-background transition-opacity hover:opacity-90"
+        className="boton-gradiente mt-8 inline-block rounded-full px-5 py-2.5 text-sm font-semibold"
       >
         Volver al catálogo
       </Link>

@@ -1,9 +1,12 @@
 import type { ICarritoItem } from '@/types';
 
 export const CART_KEY = 'electrohub-cart';
+export const CART_EVENT = 'electrohub-carrito-actualizado';
 
 function guardarCarrito(carrito: ICarritoItem[]): void {
   localStorage.setItem(CART_KEY, JSON.stringify(carrito));
+  // Avisa a los componentes de esta pestaña (el header, el carrito, etc.)
+  window.dispatchEvent(new Event(CART_EVENT));
 }
 
 function esMismoItem(item: ICarritoItem, productoId: number, varianteId: number): boolean {
@@ -66,6 +69,7 @@ export function actualizarCantidad(productoId: number, varianteId: number, canti
 
 export function limpiarCarrito(): void {
   localStorage.removeItem(CART_KEY);
+  window.dispatchEvent(new Event(CART_EVENT));
 }
 
 export function calcularTotalCarrito(carrito: ICarritoItem[]): number {
